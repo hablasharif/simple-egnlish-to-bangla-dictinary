@@ -2,4 +2,3 @@ requests
 BeautifulSoup4
 lxml
 tqdm
-googletrans
