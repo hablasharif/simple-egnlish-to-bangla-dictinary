@@ -1,3 +1,4 @@
+import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 from tqdm import tqdm
@@ -14,28 +15,25 @@ def get_bengali_meaning(word):
         meanings = [span.text.strip() for span in span_tags]
         return f"Bengali meanings of '{word}': {', '.join(meanings)}"
 
-# Prompt the user to enter the words (multiple lines)
-print("Enter the words (multiple lines). Enter 'q' to finish:")
-lines = []
-while True:
-    line = input()
-    if line == 'q':
-        break
-    lines.append(line.strip())
+def main():
+    st.title("English to Bengali Dictionary")
+    st.write("Enter the words (one per line) and click 'Get Meanings' to translate to Bengali. Enter 'q' to finish.")
 
-# Combine lines into a single line of words
-user_input = ' '.join(lines)
+    user_input = st.text_area("Enter words here:")
 
-words = user_input.split()
+    if st.button("Get Meanings"):
+        words = user_input.split()
 
-bengali_meanings = []
+        bengali_meanings = []
 
-# Add progress bar
-with tqdm(total=len(words), desc="Processing") as pbar:
-    for word in words:
-        bengali_meanings.append(get_bengali_meaning(word))
-        pbar.update(1)
+        with st.spinner("Translating..."):
+            with tqdm(total=len(words), desc="Processing") as pbar:
+                for word in words:
+                    bengali_meanings.append(get_bengali_meaning(word))
+                    pbar.update(1)
 
-# Print the Bengali meanings
-for meaning in bengali_meanings:
-    print(meaning)
+        for meaning in bengali_meanings:
+            st.write(meaning)
+
+if __name__ == "__main__":
+    main()
